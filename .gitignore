@@ -7,3 +7,8 @@ ehthumbs_vista.db
 # Folder config file
 [Dd]esktop.ini
 
+# po2lmo build
+tool/po2lmo/src/
+!tool/po2lmo/src/po2lmo.c
+!tool/po2lmo/src/template_lmo.c
+!tool/po2lmo/src/template_lmo.h
