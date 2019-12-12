@@ -9,6 +9,11 @@ local eap_list = {
 	"MSCHAPV2",
 }
 
+local eap_list = {
+  "",
+	"MSCHAPV2",
+}
+
 m = Map("cd8021x", translate("802.1x Client"), 
     translate("Configure IEEE 802.1x wired authentication, you may need to edit your WAN interface protocol as <i>DHCP</i> client <a href=\"network\">here</a>"))
 
@@ -32,6 +37,15 @@ eap = s:option(ListValue, "eap", translate("EAP"))
 for k, v in ipairs(eap_list) do
     eap:value(v)
 end
+
+phase2 = s:option(ListValue, "phase2", translate("Phase2-Authentication"))
+for k, v in ipairs(phase2_list) do
+    phase2:value(v)
+end
+
+cert = s:option(Value, "cert", translate("CA-Certificate"))
+anonymous = s:option(Value, "anonymous", translate("Anonymous Identity"))
+pairwise = s:option(Value, "pairwise", translate("Pairwise"))
 
 local apply = luci.http.formvalue("cbi.apply")
 if apply then

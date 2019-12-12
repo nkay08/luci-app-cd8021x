@@ -3,3 +3,7 @@ config login
 	option password ''
 	option ifname 'eth0'
 	option eap 'MD5'
+  option cert ''
+  option anonymous ''
+  option phase2 ''
+  option pairwise ''
