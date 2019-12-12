@@ -7,11 +7,14 @@ local eap_list = {
 	"MD5",
 	"PEAP",
 	"MSCHAPV2",
+  "TTLS",
 }
 
-local eap_list = {
+local phase2_list = {
   "",
 	"MSCHAPV2",
+  "MD5",
+  "PAP",
 }
 
 m = Map("cd8021x", translate("802.1x Client"), 
@@ -45,7 +48,7 @@ end
 
 cert = s:option(Value, "cert", translate("CA-Certificate"))
 anonymous = s:option(Value, "anonymous", translate("Anonymous Identity"))
-pairwise = s:option(Value, "pairwise", translate("Pairwise"))
+-- pairwise = s:option(Value, "pairwise", translate("Pairwise"))
 
 local apply = luci.http.formvalue("cbi.apply")
 if apply then

@@ -4,6 +4,9 @@
 # Licensed to the public under the GNU General Public License v3.
 
 START=65
+STOP=15
+
+EXTRA_COMMANDS="status"
 
 run_cd8021x()
 {
@@ -31,21 +34,41 @@ run_cd8021x()
         
         
         killall wpa_supplicant
-        echo -e "ctrl_interface=/var/run/wpa_supplicant\nctrl_interface_group=root\neapol_version=2\nap_scan=0\nnetwork={\nkey_mgmt=IEEE8021X\neap=$eap\nca_cert=\"$cert\"\nidentity=\"$username\"\npassword=\"$password\"" > /tmp/cd8021x.conf
         
-        if [ -z "${cert// }" ]; then
+        echo -e "ctrl_interface=/var/run/wpa_supplicant\n" > /tmp/cd8021x.conf
+        echo -e "ctrl_interface_group=root\n" >> /tmp/cd8021x.conf
+        echo -e "eapol_version=2\n" >> /tmp/cd8021x.conf
+        echo -e "ap_scan=0\n" >> /tmp/cd8021x.conf
+        
+        echo -e "network={\n" >> /tmp/cd8021x.conf
+        echo -e "key_mgmt=IEEE8021X\n" >> /tmp/cd8021x.conf
+        
+        
+        if [ ! -z "${eap// }" ]; then
+          echo -e "eap=$eap\n" >> /tmp/cd8021x.conf
+        fi
+        
+        if [ ! -z "${username// }" ]; then
+          echo -e "identity=\"$username\"\n" >> /tmp/cd8021x.conf
+        fi
+        
+        if [ ! -z "${password// }" ]; then
+          echo -e "password=\"$password\"\n" >> /tmp/cd8021x.conf
+        fi
+        
+        if [ ! -z "${cert// }" ]; then
           echo -e "ca_cert=\"$cert\"\n" >> /tmp/cd8021x.conf
         fi
         
-        if [ -z "${anonymous// }" ]; then
+        if [ ! -z "${anonymous// }" ]; then
           echo -e "anonymous_identity=\"$anonymous\"\n" >> /tmp/cd8021x.conf
         fi
         
-        if [ -z "${phase2// }" ]; then
+        if [ ! -z "${phase2// }" ]; then
           echo -e "phase2=\"auth=$phase2\"\n" >> /tmp/cd8021x.conf 
         fi
         
-        if [ -z "${pairwise// }" ]; then
+        if [ ! -z "${pairwise// }" ]; then
           echo -e "pairwise=$pairwise\n" >> /tmp/cd8021x.conf 
         fi
         
@@ -58,25 +81,23 @@ run_cd8021x()
                 ;;
             "MSCHAPV2")
                 echo -e "eapol_flags=0\nphase1=\"peaplabel=1\"\n" >> /tmp/cd8021x.conf
-                ;;
-            "PEAP/MSCHAPV2")
-              
+                ;;             
             *)
         esac
         
-        echo -e "}" >> /tmp/cd8021x.conf 
+        echo -e "}\n" >> /tmp/cd8021x.conf 
 
-        wpa_supplicant -B -c /tmp/cd8021x.conf -i$ifname -Dwired -dd -t -B | tee /tmp/wpa_supplicant.log
+        wpa_supplicant -B -c /tmp/cd8021x.conf -i$ifname -Dwired -dd -t | tee /tmp/wpa_supplicant.log
         
         echo "cd802.1x client has started."
+    else
+      echo "cd802.1.x client not enabled"
     fi
+
 }
 
 start()
 {
-    if [ -f /tmp/cd8021x.conf ]; then
-      rm /tmp/cd8021x.conf 
-    fi
     config_load cd8021x
     config_foreach run_cd8021x login
 }
@@ -84,7 +105,7 @@ start()
 stop()
 {
     killall wpa_supplicant    
-    echo "cd802.1x client has stoped."
+    echo "cd802.1x client has stopped."
 }
 
 status() {
