@@ -3,6 +3,8 @@
 [README](README.md) | [中文说明](README_zh.md)
 
 Configure 802.1x wired authentication on OpenWrt/LEDE<br/>
+Forked from [max0y/luci-app-cd8021x](https://github.com/max0y/luci-app-cd8021x)
+Added option to enter CA Certificate and Phase2 Authentication.
 
 ![screenshot](https://raw.githubusercontent.com/max0y/luci-app-cd8021x/master/screenshot_en.png)<br/>
 ## Install<br/>
